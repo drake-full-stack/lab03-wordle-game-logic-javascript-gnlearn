@@ -67,15 +67,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== YOUR CHALLENGE: IMPLEMENT THESE FUNCTIONS =====
 
-// TODO: Add keyboard event listener
-// document.addEventListener("keydown", (event) => {
-//     // Your code here!
-// });
+//TODO: Add keyboard event listener
+document.addEventListener("keydown", (event) => {
+    if (gameOver) {
+        logDebug(`Game Over!`, 'info');
+        return;
+    }
+    
+    const key = event.key.toUpperCase();
+
+    if (key === "BACKSPACE") {
+        logDebug(`Letter Deleted!`, 'success');
+        deleteLetter();
+
+    } else if (key === "ENTER") {
+        logDebug(`submitted guess`, 'success');
+        submitGuess();
+
+    } else if (key.length === 1 && key >= 'A' && key <= 'Z') {
+        logDebug(`Added key: ${event.key}`, 'info');
+        addLetter(key);
+        
+    } else {
+        logDebug(`Ignored key: ${event.key}`, 'info');
+    }
+});
 
 // TODO: Implement addLetter function
-// function addLetter(letter) {
-//     // Your code here!
-// }
+function addLetter(letter) {
+    if (currentTile >= 5) {
+        logDebug("Row is full!", 'info');
+    }
+
+    const currentRowElement = rows[currentRow];
+    const tiles = currentRowElement.querySelectorAll('.tile');
+    const tile = tiles[currentTile];
+
+    tile.textContent = letter;
+    tile.classList.add('filled');
+    currentTile++;
+
+    logDebug(`Added letter: ${letter} to row ${currentRow} column ${currentTile}`, 'success');
+    logDebug(`Current word: ${getCurrentWord()}`, 'info');
+}
 
 // TODO: Implement deleteLetter function  
 // function deleteLetter() {
