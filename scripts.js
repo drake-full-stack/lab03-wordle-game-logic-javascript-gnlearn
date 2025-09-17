@@ -148,7 +148,12 @@ function submitGuess() {
 
     logDebug(`Submitted guess: ${guess}`, 'info');
 
-    //checkGuess(guess, tiles);
+    const result = checkGuess(guess, tiles);
+    
+    for (i = 0; i < 5; i++) {
+        tiles[i].classList.add(result[i]);
+    };
+    
     currentRow++;
     currentTile = 0;
 
@@ -168,8 +173,41 @@ function submitGuess() {
 }
 
 // TODO: Implement checkGuess function (the hardest part!)
-// function checkGuess(guess, tiles) {
-//     // Your code here!
-//     // Remember: handle duplicate letters correctly
-//     // Return the result array
-// }
+function checkGuess(guess, tiles) {
+    logDebug(`🔍 Starting analysis for "${guess}"`, 'info');
+    
+    const target = [];
+    const guessArray = [];
+    const result = ['absent', 'absent', 'absent', 'absent', 'absent'];
+    
+    for (i = 0; i < 5; i++) {
+        target.push(TARGET_WORD[i]);
+        guessArray.push(guess[i]);
+    };
+
+    // STEP 1: Find exact matches
+    for (let i = 0; i < 5; i++) {
+        if (target[i] === guessArray[i]) {
+            result[i] = 'correct';
+            target[i] = null;
+            guessArray[i] = null;
+            logDebug(`Tile ${i} is correct: ${tiles[i].textContent}, exact match`, 'success');
+        }
+    };
+    
+    // STEP 2: Find wrong position matches  
+    for (let i = 0; i < 5; i++) {
+        if (guessArray[i] !== null) { // only check unused letters
+            if (target.includes(guessArray[i])) {
+                result[i] = 'present';
+                target[target.indexOf(guessArray[i])] = null;
+                logDebug(`Tile ${i} is present: ${tiles[i].textContent}, present in word`, 'info');
+            }
+        }
+    };
+    
+    // TODO: Apply CSS classes to tiles -- we'll do this in the next step
+    logDebug(`result array: ${result}`, 'info');
+    return result;
+
+}
