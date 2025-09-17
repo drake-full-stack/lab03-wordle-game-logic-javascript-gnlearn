@@ -132,9 +132,40 @@ function deleteLetter() {
 }
 
 // TODO: Implement submitGuess function
-// function submitGuess() {
-//     // Your code here!
-// }
+function submitGuess() {
+    if (currentTile !== 5) {
+        alert("Please enter 5 letters!");
+        return; // exit early
+    }
+
+    const currentRowElement = rows[currentRow];
+    const tiles = currentRowElement.querySelectorAll('.tile');
+    let guess = '';
+
+    tiles.forEach(tile => {
+        guess += tile.textContent;
+    });
+
+    logDebug(`Submitted guess: ${guess}`, 'info');
+
+    //checkGuess(guess, tiles);
+    currentRow++;
+    currentTile = 0;
+
+    if (guess === TARGET_WORD) {
+        gameOver = true;
+        setTimeout(() => { alert("Correct! You've guessed the word!");}, 500);
+        logDebug("Game Over! You've won!", 'success');
+
+    } else if (currentRow >= 6) {
+        gameOver = true;
+        setTimeout(() => { alert(`Game Over! The correct word was: ${TARGET_WORD}`);}, 500);
+        logDebug("Game Over! You've used all attempts!", 'info');
+
+    } else {
+        setTimeout(() => { logDebug(`Continuing`, 'info');}, 500);
+    }
+}
 
 // TODO: Implement checkGuess function (the hardest part!)
 // function checkGuess(guess, tiles) {
